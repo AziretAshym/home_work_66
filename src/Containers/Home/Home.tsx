@@ -5,6 +5,7 @@ import Loader from '../../Components/Ui/Loader/Loader.tsx';
 import { NavLink } from 'react-router-dom';
 import Calories from '../../Components/Calories/Calories.tsx';
 import ButtonLoader from '../../Components/Ui/ButtonLoader/ButtonLoader.tsx';
+import { toast } from 'react-toastify';
 
 
 interface Props {
@@ -44,6 +45,7 @@ const Home: React.FC<Props> = ({isLoading = false}) => {
     try {
       await axiosAPI.delete(`/meal-tracker/${id}.json`);
       setMeals(prevPosts => prevPosts.filter(meal => meal.id !== id));
+      toast.error('Meal deleted!')
     } catch (e) {
       console.error(e);
     } finally {
