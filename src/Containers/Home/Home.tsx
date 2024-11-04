@@ -5,7 +5,11 @@ import Loader from '../../Components/Ui/Loader/Loader.tsx';
 import { NavLink } from 'react-router-dom';
 import Calories from '../../Components/Calories/Calories.tsx';
 
-const Home = () => {
+interface Props {
+  isLoading?: boolean;
+}
+
+const Home: React.FC<Props> = ({isLoading = false}) => {
   const [meals, setMeals] = useState<IMeal[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -20,7 +24,6 @@ const Home = () => {
         }));
         setMeals(mealFromApi);
       }
-      console.log(response.data);
     }catch (e) {
       console.error(e);
     } finally {
@@ -44,13 +47,17 @@ const Home = () => {
   return (
     <div className="container">
       <div className="d-flex justify-content-between align-items-center">
-        <NavLink to="/new-meal" className="btn btn-primary mb-5">Add new meal</NavLink>
+        <NavLink to="/new-meal" className="btn btn-primary mb-5">
+          Add new meal
+
+        </NavLink>
         <Calories meals={meals}/>
       </div>
       {loading ? <Loader /> : (
         <>
-          {meals.map((meal) => (
-            <div className="card mb-3">
+
+          {meals.length > 0 ? meals.map((meal) => (
+            <div key={meal.id} className="card mb-3">
               <div className="card-header bg-primary-subtle">
                 <h3>{meal.time}</h3>
               </div>
@@ -60,11 +67,17 @@ const Home = () => {
                   <h6 className="card-text">Kcal: {meal.calories}</h6>
                   <div className="d-flex flex-column gap-1">
                     <NavLink to={`/meals/${meal.id}/edit`} type="button" className="btn btn-primary">Edit</NavLink>
-                    <button type="button" className="btn btn-danger" onClick={() => deleteMeal(meal.id)}>Delete</button>
+                    <button disabled={isLoading} type="button" className="btn btn-danger" onClick={() => deleteMeal(meal.id)}>
+                      Delete
+                    </button>
                   </div>
                 </div>
               </div>
-            </div>))}
+            </div>))
+            :
+            <h1>No meals</h1>
+          }
+
         </>
       )
       }

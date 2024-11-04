@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { IMeal } from '../../types';
+import React, { useMemo } from "react";
+import { IMeal } from "../../types";
 
 interface CaloriesProps {
   meals: IMeal[];
@@ -11,7 +11,9 @@ const Calories: React.FC<CaloriesProps> = ({ meals }) => {
   }, [meals]);
 
   return (
-    <p className="fs-4">Total Calories: <strong>{totalCalories} kcal</strong></p>
+    <p className="fs-4">
+      Total Calories: <strong>{totalCalories} kcal</strong>
+    </p>
   );
 };
 

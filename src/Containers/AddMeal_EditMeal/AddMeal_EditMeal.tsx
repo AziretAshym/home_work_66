@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axiosAPI from '../../AxiosAPI.ts';
 import { IMeal, IMealAPI, IMealForm } from '../../types';
 import MealForm from '../../Components/MealForm/MealForm.tsx';
-import Loader from '../../Components/Ui/Loader/Loader.tsx';
+import { toast } from 'react-toastify';
 
 const AddMeal_EditMeal = () => {
   const [meal, setMeal] = useState<IMeal | null>(null);
@@ -37,8 +37,10 @@ const AddMeal_EditMeal = () => {
       setLoading(true);
       if (params.idMeal) {
         await axiosAPI.put(`/meal-tracker/${params.idMeal}.json`, mealData);
+        toast.success("Meal edited!");
       } else {
         await axiosAPI.post("meal-tracker.json", mealData);
+        toast.success("Meal added!");
       }
     } catch (e) {
       console.error(e);
@@ -49,11 +51,11 @@ const AddMeal_EditMeal = () => {
 
   return (
     <div className="container">
-      {loading ? (
-        <Loader />
-      ) : (
-        <MealForm mealToEdit={meal || undefined} submitForm={submitForm} />
-      )}
+      <MealForm
+        mealToEdit={meal || undefined}
+        submitForm={submitForm}
+        isLoading={loading}
+      />
     </div>
   );
 };

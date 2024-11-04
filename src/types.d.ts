@@ -4,7 +4,7 @@ export interface IMealForm {
   calories: number;
 }
 
-export interface IMeal extends IMealForm{
+export interface IMeal extends IMealForm {
   id: string;
 }
 

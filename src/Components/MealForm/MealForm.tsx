@@ -1,19 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { IMealForm } from '../../types';
+import React, { useEffect, useState } from "react";
+import { IMealForm } from "../../types";
+import ButtonLoader from "../Ui/ButtonLoader/ButtonLoader.tsx";
 
 interface Props {
   mealToEdit?: IMealForm;
   submitForm: (meal: IMealForm) => void;
+  isLoading?: boolean;
 }
 
 const initialForm = {
   time: "",
   name: "",
-  calories: 0
+  calories: 0,
 };
 
-const MealForm: React.FC<Props> = ({mealToEdit, submitForm}) => {
-  const [meal, setMeal] = useState<IMealForm>({...initialForm})
+const MealForm: React.FC<Props> = ({
+  mealToEdit,
+  submitForm,
+  isLoading = false,
+}) => {
+  const [meal, setMeal] = useState<IMealForm>({ ...initialForm });
 
   useEffect(() => {
     if (mealToEdit) {
@@ -47,6 +53,7 @@ const MealForm: React.FC<Props> = ({mealToEdit, submitForm}) => {
 
   return (
     <div className="container">
+      <h2>{mealToEdit ? "Edit meal" : "Add new meal"}</h2>
       <form className="w-50" onSubmit={onFormSubmit}>
         <select
           className="form-select mb-4"
@@ -55,7 +62,9 @@ const MealForm: React.FC<Props> = ({mealToEdit, submitForm}) => {
           onChange={onChangeField}
           required
         >
-          <option value="" disabled>Choose meal time</option>
+          <option value="" disabled>
+            Choose meal time
+          </option>
           <option value="Breakfast">Breakfast</option>
           <option value="Snack">Snack</option>
           <option value="Lunch">Lunch</option>
@@ -72,7 +81,6 @@ const MealForm: React.FC<Props> = ({mealToEdit, submitForm}) => {
           required
         />
 
-
         <div className="input-group input-group-sm mb-3">
           <input
             type="number"
@@ -83,15 +91,18 @@ const MealForm: React.FC<Props> = ({mealToEdit, submitForm}) => {
             onChange={onChangeField}
             required
           />
-          <span className="input-group-text" id="inputGroup-sizing-sm">kcal</span>
+          <span className="input-group-text" id="inputGroup-sizing-sm">
+            kcal
+          </span>
         </div>
 
-        <button type="submit" className="btn btn-primary">Save</button>
-
-
+        <button disabled={isLoading} type="submit" className="btn btn-primary">
+          <span className="me-2">{mealToEdit ? "Edit" : "Save"}</span>
+          {isLoading ? <ButtonLoader /> : null}
+        </button>
       </form>
     </div>
-);
+  );
 };
 
 export default MealForm;
