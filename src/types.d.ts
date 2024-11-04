@@ -7,3 +7,7 @@ export interface IMealForm {
 export interface IMeal extends IMealForm{
   id: string;
 }
+
+export interface IMealAPI {
+  [id: string]: IMeal;
+}

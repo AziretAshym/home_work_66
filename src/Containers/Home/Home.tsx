@@ -31,6 +31,15 @@ const Home = () => {
     void fetchData();
   }, [fetchData]);
 
+  const deleteMeal = async (id: string) => {
+    try {
+      await axiosAPI.delete(`/meal-tracker/${id}.json`);
+      setMeals(prevPosts => prevPosts.filter(meal => meal.id !== id));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <div className="container">
       <NavLink to="/new-meal" className="btn btn-primary mb-5">Add new meal</NavLink>
@@ -44,10 +53,10 @@ const Home = () => {
               <div className="card-body d-flex justify-content-between align-items-center">
                 <h5 className="card-title">{meal.name}</h5>
                 <div className="d-flex align-items-center justify-content-between gap-3">
-                  <h6 className="card-text">{meal.calories}</h6>
+                  <h6 className="card-text">Kcal: {meal.calories}</h6>
                   <div className="d-flex flex-column gap-1">
-                    <button type="button" className="btn btn-primary">Edit</button>
-                    <button type="button" className="btn btn-danger">Delete</button>
+                    <NavLink to={`/meals/${meal.id}/edit`} type="button" className="btn btn-primary">Edit</NavLink>
+                    <button type="button" className="btn btn-danger" onClick={() => deleteMeal(meal.id)}>Delete</button>
                   </div>
                 </div>
               </div>
