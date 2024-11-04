@@ -4,6 +4,8 @@ import { IMeal } from '../../types';
 import Loader from '../../Components/Ui/Loader/Loader.tsx';
 import { NavLink } from 'react-router-dom';
 import Calories from '../../Components/Calories/Calories.tsx';
+import ButtonLoader from '../../Components/Ui/ButtonLoader/ButtonLoader.tsx';
+
 
 interface Props {
   isLoading?: boolean;
@@ -12,6 +14,8 @@ interface Props {
 const Home: React.FC<Props> = ({isLoading = false}) => {
   const [meals, setMeals] = useState<IMeal[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDeleteId, setLoadingDeleteId] = useState<string | null>(null);
+
 
   const fetchData = useCallback(async () => {
     try {
@@ -22,7 +26,7 @@ const Home: React.FC<Props> = ({isLoading = false}) => {
           id: mealKey,
           ...response.data[mealKey],
         }));
-        setMeals(mealFromApi);
+        setMeals(mealFromApi.reverse());
       }
     }catch (e) {
       console.error(e);
@@ -36,21 +40,21 @@ const Home: React.FC<Props> = ({isLoading = false}) => {
   }, [fetchData]);
 
   const deleteMeal = async (id: string) => {
+    setLoadingDeleteId(id);
     try {
       await axiosAPI.delete(`/meal-tracker/${id}.json`);
       setMeals(prevPosts => prevPosts.filter(meal => meal.id !== id));
     } catch (e) {
       console.error(e);
+    } finally {
+      setLoadingDeleteId(null);
     }
   };
 
   return (
     <div className="container">
       <div className="d-flex justify-content-between align-items-center">
-        <NavLink to="/new-meal" className="btn btn-primary mb-5">
-          Add new meal
-
-        </NavLink>
+        <NavLink to="/new-meal" className="btn btn-primary mb-5">Add new meal</NavLink>
         <Calories meals={meals}/>
       </div>
       {loading ? <Loader /> : (
@@ -68,7 +72,8 @@ const Home: React.FC<Props> = ({isLoading = false}) => {
                   <div className="d-flex flex-column gap-1">
                     <NavLink to={`/meals/${meal.id}/edit`} type="button" className="btn btn-primary">Edit</NavLink>
                     <button disabled={isLoading} type="button" className="btn btn-danger" onClick={() => deleteMeal(meal.id)}>
-                      Delete
+                      <span className="me-2">Delete</span>
+                      {loadingDeleteId === meal.id ? <ButtonLoader /> : null}
                     </button>
                   </div>
                 </div>
