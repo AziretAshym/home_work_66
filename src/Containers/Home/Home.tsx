@@ -3,6 +3,7 @@ import axiosAPI from '../../AxiosAPI.ts';
 import { IMeal } from '../../types';
 import Loader from '../../Components/Ui/Loader/Loader.tsx';
 import { NavLink } from 'react-router-dom';
+import Calories from '../../Components/Calories/Calories.tsx';
 
 const Home = () => {
   const [meals, setMeals] = useState<IMeal[]>([]);
@@ -42,7 +43,10 @@ const Home = () => {
 
   return (
     <div className="container">
-      <NavLink to="/new-meal" className="btn btn-primary mb-5">Add new meal</NavLink>
+      <div className="d-flex justify-content-between align-items-center">
+        <NavLink to="/new-meal" className="btn btn-primary mb-5">Add new meal</NavLink>
+        <Calories meals={meals}/>
+      </div>
       {loading ? <Loader /> : (
         <>
           {meals.map((meal) => (
